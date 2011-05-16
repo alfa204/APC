@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:orientation="vertical" android:layout_height="wrap_content">
+	<ImageView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/logoImageView" android:src="@drawable/logo" android:layout_gravity="center_horizontal"></ImageView>
+	<ImageView android:layout_height="wrap_content" android:id="@+id/titleImageView" android:src="@drawable/title" android:layout_width="match_parent"></ImageView>
+    <TextView android:text="@string/inputDateLabel" android:id="@+id/textView1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_weight="1"></TextView>
+    <Button android:layout_height="wrap_content" android:id="@+id/pickDate" android:text="Select Date" android:layout_weight="1" android:layout_width="wrap_content" android:layout_gravity="center_horizontal"></Button>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:id="@+id/selectedDateLabel" android:text="Cycle Date Selected:" android:layout_gravity="center_horizontal"></TextView>
+	<EditText android:layout_height="wrap_content"
+		android:layout_width="match_parent" android:freezesText="true" android:editable="false" android:id="@+id/inputDateTextBox" android:layout_weight="1" android:layout_gravity="center_horizontal"></EditText>
+	<Button android:text="Calculate" android:id="@+id/calculateButton" android:layout_width="wrap_content" android:layout_weight="1" android:layout_height="match_parent" android:layout_gravity="center"></Button>
+	
+</LinearLayout>

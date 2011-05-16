@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="inputDateLabel">Enter Last Cycle Date (Example 12/25/2010):</string>
+    <string name="outputDateLabel">Due Date:</string>
+    <string name="app_name">Pregnancy Calculator</string>
+    <string name="weeksLabel">Weeks along:</string>
+    <string name="chooseDate">Your Last Cycle Date:</string>
+</resources>
