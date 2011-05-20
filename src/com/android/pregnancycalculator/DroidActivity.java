@@ -1,6 +1,17 @@
+/* 
+ * Pregnancy Calculator
+ * DroidActivity.java
+ * Main activity which has user input last cycle start date using a Date Picker
+ * and passes the variables to the DroidResults Activity to display the calculated
+ * information.
+ *  
+ * Dylan Perales
+ * Version 1.1
+ */
+
 package com.android.pregnancycalculator;
 
-//Import all necessary classes
+//Import all necessary imports
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
@@ -22,6 +33,7 @@ import android.app.Dialog;
 public class DroidActivity extends Activity {
 	//Declare our TextBox Variables
 	private EditText inputDateTextBox;
+	private EditText babyNameTextBox;
 	
 	//Declare our Date Select and Calculate Buttons
 	private Button mPickDate;
@@ -45,6 +57,7 @@ public class DroidActivity extends Activity {
         inputDateTextBox = (EditText)findViewById(R.id.inputDateTextBox);
         calculateButton = (Button)findViewById(R.id.calculateButton);
         mPickDate = (Button) findViewById(R.id.pickDate);
+        babyNameTextBox = (EditText)findViewById(R.id.babyNameTextBox);
         
         //Listener for Select Date Button. Shows DatePicker Dialog
         mPickDate.setOnClickListener (new View.OnClickListener() {
@@ -58,10 +71,6 @@ public class DroidActivity extends Activity {
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
         mDay = c.get(Calendar.DAY_OF_MONTH);
-        
-        //Set the output fields so they cannot be selected or edited
-//        outputDateTextBox.setFocusable(false);
-//        weeksTextBox.setFocusable(false);
         
         //Create our alert dialog in case a date is not selected
         final AlertDialog.Builder errorDialog = new AlertDialog.Builder(this);
@@ -84,7 +93,10 @@ public class DroidActivity extends Activity {
 					
 					//Input string grabbed from first EditText Box
 					String startDateInput = inputDateTextBox.getText().toString();
-					
+					String babyName = babyNameTextBox.getText().toString();
+					if (babyName==""){
+						 babyName = "Baby";
+					}
 					
 					//Create our 3 calendars to use to calculate due date and weeks along
 					Calendar startCalendar = new GregorianCalendar();
@@ -116,16 +128,22 @@ public class DroidActivity extends Activity {
 					int weeksToGo = dueCalendar.get(Calendar.WEEK_OF_YEAR) - currentCalendar.get(Calendar.WEEK_OF_YEAR);
 					int daysToGo = (dueCalendar.get(Calendar.DAY_OF_YEAR) - currentCalendar.get(Calendar.DAY_OF_YEAR)) %7; 
 					
-					
+					//Bundle to pass variables to DroidResults activity
 					Bundle b=new Bundle();
+					b.putString("babyName", babyName);
 					b.putString(dueDate, df.format(outputDate));
 					b.putInt("weeksAlong", weeksAlong);
 					b.putInt("daysAlong", daysAlong);
 					b.putInt("weeksToGo", weeksToGo);
 					b.putInt("daysToGo", daysToGo);
+					
+					//Intent to start new activity DroidResults
 					Intent i=new Intent(DroidActivity.this, DroidResults.class);
+					
+					//Put bundle into new intent for new Activity
 					i.putExtras(b);
 
+					//Start new activity with intent "i" which contains the bundled variables
 					startActivity(i);
 					
 				//Catch any exceptions and display error dialog

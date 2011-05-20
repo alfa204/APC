@@ -1,43 +1,59 @@
+/* 
+ * Pregnancy Calculator
+ * DroidResults.java
+ * This Activity is called when pressing calculate on DroidActivity
+ * Pulls variables from Bundle B and displays the calculated data
+ * Also displays images and description based on weeks along
+ * 
+ * Dylan Perales
+ * Version 1.1
+ */
+
 package com.android.pregnancycalculator;
 
-//import java.util.Calendar;
-//import java.util.Date;
-//import java.util.GregorianCalendar;
-
+//Imports for this Activity
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
+//DroidResults Activity class which displays the information
 public class DroidResults extends Activity{
+	//Declare our view variables
+	private TextView babyNameTextView;
 	private EditText outputDateTextBox;
-	//private EditText weeksTextBox;
 	private TextView fDesc;
 	private TextView farAlongTextView;
 	private TextView toGoTextView;
 		
+	//onCreate method which is called within the Activity when calculate is pressed on DroidActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        //Set our view and declare view elements for this view
         setContentView(R.layout.info);
+        babyNameTextView = (TextView)findViewById(R.id.babyNameTextView);
         outputDateTextBox = (EditText)findViewById(R.id.outputDateTextBox);
-        //weeksTextBox = (EditText)findViewById(R.id.weeksTextBox);
         fDesc = (TextView)findViewById(R.id.fDesc);
         farAlongTextView = (TextView)findViewById(R.id.farAlongTextView);
         toGoTextView = (TextView)findViewById(R.id.toGoTextView);
-        
+
+        //Declare our strings so we can pull the variables from the bundle
         String dueDate = "";
         String fInfo = "";
+        String babyName = "";
         
+        //Declare and get bundle with variables passed from DroidActivity
         Bundle b = getIntent().getExtras(); 
+        babyName = b.getString(babyName);
+        dueDate = b.getString(dueDate);
         int weeksAlong = b.getInt("weeksAlong", 0);
         int daysAlong = b.getInt("daysAlong", 0);
         int weeksToGo = b.getInt("weeksToGo", 0);
         int daysToGo = b.getInt("daysToGo", 0);
-        dueDate = b.getString(dueDate);
         
-        
+        //If statements to set Image and Description based on weeks along
         ImageView fiv = (ImageView)findViewById(R.id.fiv);
         if (weeksAlong>=0 && weeksAlong<=3){
         	fiv.setImageResource(R.drawable.f0_3);
@@ -80,25 +96,29 @@ public class DroidResults extends Activity{
 			fInfo = "The average baby is more than 19 inches long and weighs nearly 7 pounds now, but babies vary widely in size at this stage.";
 		}
         
-		//Output due date to second text box
-		outputDateTextBox.setText(String.valueOf(dueDate));
-		
+		//Get time from conception and time until due date
 		String farAlong = getFarAlong(weeksAlong, daysAlong);
 		String toGo = getToGo(weeksToGo, daysToGo);
 		
-		//Output weeks along to third text box
-		farAlongTextView.setText(String.valueOf(farAlong));
-		toGoTextView.setText(toGo);
-		
-		
-		updatefDescDisplay(fInfo);
+		//Call method to update display
+		babyNameTextView.setText(babyName);
+		updatefDescDisplay(dueDate, fInfo, farAlong, toGo);
 		
 		}
     
-    private void updatefDescDisplay(String m) {
-        fDesc.setText(m);
+    //Method to update display with output data
+    private void updatefDescDisplay(String dD, String fI, String fA, String tG) {
+    	
+    	//Update display with information
+    	
+        outputDateTextBox.setText(dD);
+    	fDesc.setText(fI);
+        farAlongTextView.setText(fA);
+        toGoTextView.setText(tG);
+        
     }
     
+    //Method to get how far along user is based on weeks and days and return the string
     private String getFarAlong(int w, int d){
     	String farAlong = "";
     	if(w==0 && d==0){
@@ -118,6 +138,7 @@ public class DroidResults extends Activity{
     	return farAlong;
     }
     
+    //Method to get how long until due date based on weeks nd days and return the string
     private String getToGo(int w, int d){
     	String toGo = "";
     	if(w==0 && d==0){
