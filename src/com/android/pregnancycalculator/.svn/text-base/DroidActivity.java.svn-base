@@ -44,14 +44,10 @@ public class DroidActivity extends Activity {
 	private int mYear = cal.get(Calendar.YEAR);
 	private int mMonth = cal.get(Calendar.MONTH);
 	private int mDay = cal.get(Calendar.DAY_OF_MONTH);
-	
-	//PregCalcData myDBAdapter = new PregCalcData();
 
 	// Declare DateDialog
 	static final int DATE_DIALOG_ID = 0;
-		
-	PregCalcData myDBAdapter = new PregCalcData(null);
-	
+
 	String startDateInput;
 
 	// Main layout view
@@ -175,8 +171,8 @@ public class DroidActivity extends Activity {
 					b.putInt("weeksToGo", weeksTogo);
 					b.putInt("daysToGo", daysTogo);
 					
-//					myDBAdapter.insert(babyName, dueDate, daysTogo, daysTogo, daysTogo, daysTogo);
-//					myDBAdapter.close();
+					PregCalcData.insert{babyName, dueDate, weeksAlong, daysAlong, weeksTogo, daysTogo);
+					
 
 					// Intent to start new activity DroidResults
 					Intent p = new Intent(DroidActivity.this,
@@ -190,11 +186,9 @@ public class DroidActivity extends Activity {
 					startActivity(p);
 
 					// Catch any exceptions and display error dialog
-				} 		
-				catch (Exception e) {
+				} catch (Exception e) {
 					errorDialog.show();
 				}
-				
 			}
 
 		});
