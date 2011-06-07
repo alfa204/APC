@@ -44,30 +44,25 @@ public class DroidActivity extends Activity {
 	private int mYear = cal.get(Calendar.YEAR);
 	private int mMonth = cal.get(Calendar.MONTH);
 	private int mDay = cal.get(Calendar.DAY_OF_MONTH);
-	
-	//PregCalcData myDBAdapter = new PregCalcData();
 
 	// Declare DateDialog
 	static final int DATE_DIALOG_ID = 0;
-		
-	PregCalcData myDBAdapter = new PregCalcData(null);
-	
-	String startDateInput;
 
-	// Main layout view
+	//String startDateInput;
+
+	// Main layout view adding main.xml
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		// Initialize the EditText fields
+		// Initialize the EditText fields and Buttons
 		inputDateTextBox = (EditText) findViewById(R.id.inputDateTextBox);
 		calculateButton = (Button) findViewById(R.id.calculateButton);
 		mPickDate = (Button) findViewById(R.id.pickDate);
 		babyNameTextBox = (EditText) findViewById(R.id.babyNameTextBox);
 
-		// Create our alert dialog in case the date selected is past the current
-		// date
+		// Create our alert dialog if user does not select a date
 		final AlertDialog.Builder errorDialog = new AlertDialog.Builder(this);
 		errorDialog.setMessage("Please select a Date");
 		errorDialog.setPositiveButton("Ok",
@@ -79,17 +74,17 @@ public class DroidActivity extends Activity {
 					}
 				});
 
-		// Create our alert dialog in case a date is not selected
-		final AlertDialog.Builder inputDateError = new AlertDialog.Builder(this);
-		inputDateError.setMessage("You did not select a date");
-		inputDateError.setPositiveButton("Ok",
-				new DialogInterface.OnClickListener() {
-
-					// Dismiss the dialog when OK is clicked
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
+		// FUTURE ERROR DIALOG FOR TESTING DATE RANGE
+//		final AlertDialog.Builder inputDateError = new AlertDialog.Builder(this);
+//		inputDateError.setMessage("You did not select a date");
+//		inputDateError.setPositiveButton("Ok",
+//				new DialogInterface.OnClickListener() {
+//
+//					// Dismiss the dialog when OK is clicked
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.dismiss();
+//					}
+//				});
 
 		// Listener for Select Date Button. Shows DatePicker Dialog
 		mPickDate.setOnClickListener(new View.OnClickListener() {
@@ -105,10 +100,9 @@ public class DroidActivity extends Activity {
 			public void onClick(View v) {
 				try {
 					// Input string grabbed from first EditText Box
-					startDateInput = inputDateTextBox.getText().toString();
+					String startDateInput = inputDateTextBox.getText().toString();
 
-					// Create our 3 calendars to use to calculate due date and
-					// weeks along
+					// Create our 3 calendars to use to calculate due date and weeks along
 					Calendar startCalendar = new GregorianCalendar();
 					Calendar currentCalendar = new GregorianCalendar();
 					Calendar dueCalendar = new GregorianCalendar();
@@ -119,8 +113,7 @@ public class DroidActivity extends Activity {
 					// Convert the user input into a date
 					Date date = (Date) df.parse(startDateInput);
 
-					// Set the current date from input on due date and start
-					// calendar
+					// Set the current date from input on due date and start calendar
 					dueCalendar.setTime(date);
 					startCalendar.setTime(date);
 					if (startCalendar.getTimeInMillis() > currentCalendar
@@ -128,43 +121,54 @@ public class DroidActivity extends Activity {
 						throw new Exception("dateException");
 					}
 
-					// Add 280 days to the due date calendar to get the correct
-					// due date
+					// Add 280 days to the due date calendar to get the correct due date
 					calcDue(dueCalendar);
 
 					// Set outputDate to system date
 					Date outputDate = dueCalendar.getTime();
 
-					// Determine weeks along by subtracting start date from
-					// current date
-					int weeksAlong = currentCalendar.get(Calendar.WEEK_OF_YEAR)
-							- startCalendar.get(Calendar.WEEK_OF_YEAR);
-					if (weeksAlong < 0)
+					// Determine weeks along by subtracting start date from current date
+					int weeksAlong = currentCalendar.get(Calendar.WEEK_OF_YEAR)- startCalendar.get(Calendar.WEEK_OF_YEAR);
+					
+					// If user is trying to determine future due date add 52 weeks from weeks along
+					if (weeksAlong <= 0){
 						weeksAlong += 52;
-					int daysAlong = (currentCalendar.get(Calendar.DAY_OF_YEAR) - startCalendar
-							.get(Calendar.DAY_OF_YEAR)) % 7;
-					if (daysAlong < 0)
+					}
+					
+					// Determine days along by subtracting start day from current day of year
+					int daysAlong = (currentCalendar.get(Calendar.DAY_OF_YEAR) - startCalendar.get(Calendar.DAY_OF_YEAR)) % 7;
+					
+					// If user is trying to determine future due date add 7 days to days along 
+					if (daysAlong < 0){ 
 						daysAlong += 7;
-					int weeksTogo = dueCalendar.get(Calendar.WEEK_OF_YEAR)
-							- currentCalendar.get(Calendar.WEEK_OF_YEAR);
-					if (weeksTogo < 0)
+					}
+					
+					// Get weeks to go by subtracting current week from due week of year
+					int weeksTogo = dueCalendar.get(Calendar.WEEK_OF_YEAR) - currentCalendar.get(Calendar.WEEK_OF_YEAR);
+					
+					// If  user is trying to determine future due date add 52 weeks to weeks to go
+					if (weeksTogo < 0){
 						weeksTogo += 52;
-					int daysTogo = (dueCalendar.get(Calendar.DAY_OF_YEAR) - currentCalendar
-							.get(Calendar.DAY_OF_YEAR)) % 7;
-					if (daysTogo < 0)
+					}
+					
+					// Get Days to go by subtracting current day from due day of year
+					int daysTogo = (dueCalendar.get(Calendar.DAY_OF_YEAR) - currentCalendar.get(Calendar.DAY_OF_YEAR)) % 7;
+					
+					// If user is trying to determine future due date add 7 days to days to go
+					if (daysTogo < 0){
 						daysTogo += 7;
+					}
 
 					// Convert to a String
 					String dueDate = df.format(outputDate);
 					String babyName = babyNameTextBox.getText().toString();
 
-					// savePregInfo(babyName, dueDate, weeksAlong, daysAlong,
-					// weeksTogo, daysTogo);
-
-					// PregCalcData pregCalcData = new PregCalcData(this);
-					// pregCalcData.insert(babyName, dueDate, weeksAlong,
-					// daysAlong, weeksTogo, daysTogo);
-					// pregCalcData.close();
+					// Input information into SQLite Database (Experimental)
+//					String pregcalcdb = "pregcalc.db";
+//					PregCalcData pcDB = new PregCalcData(null, pregcalcdb, null, 1);
+//					pcDB.insert(babyName, dueDate, weeksAlong,
+//					daysAlong, weeksTogo, daysTogo);
+//					pcDB.close();
 
 					// Bundle to pass variables to DroidResults activity
 					Bundle b = new Bundle();
@@ -175,22 +179,18 @@ public class DroidActivity extends Activity {
 					b.putInt("weeksToGo", weeksTogo);
 					b.putInt("daysToGo", daysTogo);
 					
-//					myDBAdapter.insert(babyName, dueDate, daysTogo, daysTogo, daysTogo, daysTogo);
-//					myDBAdapter.close();
 
 					// Intent to start new activity DroidResults
-					Intent p = new Intent(DroidActivity.this,
-							DroidResults.class);
+					Intent p = new Intent(DroidActivity.this,DroidResults.class);
 
 					// Put bundle into new intent for new Activity
 					p.putExtras(b);
 
-					// Start new activity with intent "i" which contains the
-					// bundled variables
+					// Start new activity with intent "p" which contains the bundled variables
 					startActivity(p);
 
-					// Catch any exceptions and display error dialog
-				} 		
+				} 	
+				// Catch any exceptions and display error dialog
 				catch (Exception e) {
 					errorDialog.show();
 				}
@@ -200,6 +200,7 @@ public class DroidActivity extends Activity {
 		});
 	}
 
+	//Calculate due date by adding 280 days from start date
 	protected void calcDue(Calendar dueCalendar) {
 		dueCalendar.add(Calendar.DAY_OF_YEAR, 280);
 	}
@@ -210,16 +211,7 @@ public class DroidActivity extends Activity {
 				// January is 0 so add 1
 				.append(mMonth + 1).append("/").append(mDay).append("/")
 				.append(mYear));
-
-		// Clear previous fields when selecting a Date (Possible future use with
-		// outputDateTextBox.setText("");
-		// weeksTextBox.setText("");
 	}
-
-	// private void savePregInfo(String bN, String dD, int wA, int dA, int wT,
-	// int dT){
-	//
-	// }
 
 	// Create Dialog DatePicker when pressing/clicking button
 	@Override

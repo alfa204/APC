@@ -56,8 +56,7 @@ public class DroidResults extends Activity {
 		}
 	}
 
-	// onCreate method which is called within the Activity when calculate is
-	// pressed on DroidActivity
+	// onCreate method which is called within the Activity when calculate is pressed on DroidActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -83,7 +82,6 @@ public class DroidResults extends Activity {
 		int daysToGo = b.getInt("daysToGo", 0);
 
 		// If statements to set Image and Description based on weeks along
-
 		setImageResource(weeksAlong);
 
 		// Get time from conception and time until due date
@@ -91,7 +89,6 @@ public class DroidResults extends Activity {
 		String toGo = getToGo(weeksToGo, daysToGo);
 
 		// Call method to update display
-		// babyNameTextView.setText(babyName);
 		babyNameTextView.setText(babyName);
 		updatefDescDisplay(dueDate, /* fInfo, */farAlong, toGo);
 
@@ -148,7 +145,6 @@ public class DroidResults extends Activity {
 			String tG) {
 
 		// Update display with information
-
 		outputDateTextBox.setText(dD);
 		// fDesc.setText(fI);
 		farAlongTextView.setText(fA);
@@ -156,8 +152,7 @@ public class DroidResults extends Activity {
 
 	}
 
-	// Method to get how far along user is based on weeks and days and return
-	// the string
+	// Method to get how far along user is based on weeks and days and return the string
 	private String getFarAlong(int w, int d) {
 		String farAlong = "";
 		if (w == 0 && d == 0) {
@@ -175,8 +170,7 @@ public class DroidResults extends Activity {
 		return farAlong;
 	}
 
-	// Method to get how long until due date based on weeks nd days and return
-	// the string
+	// Method to get how long until due date based on weeks and days and return the string
 	private String getToGo(int w, int d) {
 		String toGo = "";
 		if (w == 0 && d == 0) {
