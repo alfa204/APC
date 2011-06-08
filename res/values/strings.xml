@@ -7,4 +7,6 @@
     <string name="chooseDate">Your Last Cycle Date:</string>
     <string name="resetLabel">Reset</string>
     <string name="db_cleared">Database Cleared</string>
+    <string name="dbInput">Saved to database successfully!</string>
+    <string name="dbInputFailed">Saving to database unsuccessful :(</string>
 </resources>

@@ -27,7 +27,7 @@ public class PregCalcData extends SQLiteOpenHelper {
 	public static final String TABLE_NAME = "preginfo";
 
 	public static final String _ID = BaseColumns._ID;
-	public static final String NAME = "name";
+	public static final String BABY_NAME = "babyName";
 	public static final String DUE_DATE = "due_date";
 	public static final String WEEKS_ALONG = "weeks_along";
 	public static final String DAYS_ALONG = "days_along";
@@ -46,11 +46,17 @@ public class PregCalcData extends SQLiteOpenHelper {
 	// Method to create TABLE
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String sql = "CREATE TABLE " + TABLE_NAME + " (" + _ID
-				+ " INTEGER PRIMARY KEY, " + NAME + " TEXT NOT NULL, "
-				+ DUE_DATE + " TEXT NOT NULL, " + WEEKS_ALONG + " INTEGER"
-				+ DAYS_ALONG + " INTEGER" + WEEKS_TOGO + " INTEGER" + DAYS_TOGO
-				+ " INTEGER" + ");";
+//		String sql = "CREATE TABLE " + TABLE_NAME + " (" + _ID
+//				+ " INTEGER PRIMARY KEY, " + BABY_NAME + " TEXT NOT NULL, "
+//				+ DUE_DATE + " TEXT NOT NULL, " + WEEKS_ALONG + " INTEGER"
+//				+ DAYS_ALONG + " INTEGER" + WEEKS_TOGO + " INTEGER" + DAYS_TOGO
+//				+ " INTEGER" + ");";
+		
+		String sql = 
+			"CREATE TABLE " + TABLE_NAME + " (" + BABY_NAME + " TEXT NOT NULL, "
+			+ DUE_DATE + " TEXT NOT NULL, " + WEEKS_ALONG + " INTEGER"
+			+ DAYS_ALONG + " INTEGER" + WEEKS_TOGO + " INTEGER" + DAYS_TOGO
+			+ " INTEGER" + ");";
 
 		db.execSQL(sql);
 	}
@@ -64,12 +70,12 @@ public class PregCalcData extends SQLiteOpenHelper {
 	}
 
 	// Used for inserting values into Table
-	public void insert(String name, String dueDate, int weeksAlong,
+	public void insert(String babyName, String dueDate, int weeksAlong,
 			int daysAlong, int weeksTogo, int daysTogo) {
 		SQLiteDatabase db = getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(NAME, name);
+		values.put(BABY_NAME, babyName);
 		values.put(DUE_DATE, dueDate);
 		values.put(WEEKS_ALONG, weeksAlong);
 		values.put(DAYS_ALONG, daysAlong);
@@ -81,8 +87,8 @@ public class PregCalcData extends SQLiteOpenHelper {
 
 	// Only used when returning more than 1 record (I only use 1)
 	 public Cursor all(Activity activity){
-	 String[] from = { _ID, NAME, DUE_DATE, WEEKS_ALONG };
-	 String order = NAME;
+	 String[] from = { _ID, BABY_NAME, DUE_DATE, WEEKS_ALONG };
+	 String order = BABY_NAME;
 	
 	 SQLiteDatabase db = getReadableDatabase();
 	 Cursor cursor = db.query(TABLE_NAME, from, null, null, null, null,

@@ -41,12 +41,16 @@ public class DroidResults extends Activity {
 		return true;
 	}
 
+	// Method to call when selecting preferences
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.resetInfo:
+			// When selecting option show toast message confirming database is being cleared(NOT IMPLEMENTED)
 			Toast.makeText(this, getString(R.string.db_cleared),
 					Toast.LENGTH_SHORT).show();
+			
+			// Start Intent/Activity back to main class
 			Intent resetIntent = new Intent(this, DroidActivity.class);
 			startActivity(resetIntent);
 			return true;
@@ -141,12 +145,10 @@ public class DroidResults extends Activity {
 	}
 
 	// Method to update display with output data
-	private void updatefDescDisplay(String dD, /* String fI, */String fA,
-			String tG) {
+	private void updatefDescDisplay(String dD, String fA, String tG) {
 
 		// Update display with information
 		outputDateTextBox.setText(dD);
-		// fDesc.setText(fI);
 		farAlongTextView.setText(fA);
 		toGoTextView.setText(tG);
 

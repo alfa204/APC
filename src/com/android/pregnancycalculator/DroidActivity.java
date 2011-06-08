@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.android.pregnancycalculator.R;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.app.Dialog;
@@ -47,8 +49,6 @@ public class DroidActivity extends Activity {
 
 	// Declare DateDialog
 	static final int DATE_DIALOG_ID = 0;
-
-	//String startDateInput;
 
 	// Main layout view adding main.xml
 	@Override
@@ -74,17 +74,17 @@ public class DroidActivity extends Activity {
 					}
 				});
 
-		// FUTURE ERROR DIALOG FOR TESTING DATE RANGE
-//		final AlertDialog.Builder inputDateError = new AlertDialog.Builder(this);
-//		inputDateError.setMessage("You did not select a date");
-//		inputDateError.setPositiveButton("Ok",
-//				new DialogInterface.OnClickListener() {
-//
-//					// Dismiss the dialog when OK is clicked
-//					public void onClick(DialogInterface dialog, int which) {
-//						dialog.dismiss();
-//					}
-//				});
+		// **FUTURE ERROR DIALOG FOR TESTING DATABASE INPUT**
+		final AlertDialog.Builder dbFail = new AlertDialog.Builder(this);
+		dbFail.setMessage("Database input failed");
+		dbFail.setPositiveButton("Ok",
+				new DialogInterface.OnClickListener() {
+
+					// Dismiss the dialog when OK is clicked
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
 
 		// Listener for Select Date Button. Shows DatePicker Dialog
 		mPickDate.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +130,7 @@ public class DroidActivity extends Activity {
 					// Determine weeks along by subtracting start date from current date
 					int weeksAlong = currentCalendar.get(Calendar.WEEK_OF_YEAR)- startCalendar.get(Calendar.WEEK_OF_YEAR);
 					
-					// If user is trying to determine future due date add 52 weeks from weeks along
+					// If due date is next year add 52 weeks from weeks along
 					if (weeksAlong <= 0){
 						weeksAlong += 52;
 					}
@@ -138,7 +138,7 @@ public class DroidActivity extends Activity {
 					// Determine days along by subtracting start day from current day of year
 					int daysAlong = (currentCalendar.get(Calendar.DAY_OF_YEAR) - startCalendar.get(Calendar.DAY_OF_YEAR)) % 7;
 					
-					// If user is trying to determine future due date add 7 days to days along 
+					// If due date is next year add 7 days to days along 
 					if (daysAlong < 0){ 
 						daysAlong += 7;
 					}
@@ -146,7 +146,7 @@ public class DroidActivity extends Activity {
 					// Get weeks to go by subtracting current week from due week of year
 					int weeksTogo = dueCalendar.get(Calendar.WEEK_OF_YEAR) - currentCalendar.get(Calendar.WEEK_OF_YEAR);
 					
-					// If  user is trying to determine future due date add 52 weeks to weeks to go
+					// If due date is next year add 52 weeks to weeks to go
 					if (weeksTogo < 0){
 						weeksTogo += 52;
 					}
@@ -154,21 +154,19 @@ public class DroidActivity extends Activity {
 					// Get Days to go by subtracting current day from due day of year
 					int daysTogo = (dueCalendar.get(Calendar.DAY_OF_YEAR) - currentCalendar.get(Calendar.DAY_OF_YEAR)) % 7;
 					
-					// If user is trying to determine future due date add 7 days to days to go
+					// If due date is next year add 7 days to days to go
 					if (daysTogo < 0){
 						daysTogo += 7;
 					}
 
-					// Convert to a String
+					// Convert date to a String to output and pass in bundle
 					String dueDate = df.format(outputDate);
+					
+					//Get babyname from babyname textbox
 					String babyName = babyNameTextBox.getText().toString();
 
 					// Input information into SQLite Database (Experimental)
-//					String pregcalcdb = "pregcalc.db";
-//					PregCalcData pcDB = new PregCalcData(null, pregcalcdb, null, 1);
-//					pcDB.insert(babyName, dueDate, weeksAlong,
-//					daysAlong, weeksTogo, daysTogo);
-//					pcDB.close();
+					updateDB(babyName, dueDate, weeksAlong, daysAlong, weeksTogo, daysTogo);
 
 					// Bundle to pass variables to DroidResults activity
 					Bundle b = new Bundle();
@@ -224,6 +222,27 @@ public class DroidActivity extends Activity {
 		return null;
 	}
 
+	// Method to insert data into Database
+	private void updateDB(String bN, String dD, int wA, int dA, int wT, int dT){
+		try{
+			PregCalcData pcDB = new PregCalcData(this);
+			pcDB.insert(bN, dD, wA, dA, wT, dT);
+			pcDB.close();
+		}
+		// Catch exception and show toast message with information
+		catch (Exception e) {
+			displayExceptionMessage(this, e.getMessage());
+			
+			// **Toast message to report failure (Future use)**
+//			Toast.makeText(this, getString(R.string.dbInputFailed),
+//					Toast.LENGTH_SHORT).show();
+		}
+	}
+	// Method to show exception toast message
+	public static void displayExceptionMessage(Context context, String msg) {
+		 Toast.makeText(context, msg , Toast.LENGTH_LONG).show();
+		}
+	
 	// DatePicker Dialog to set Date integers
 	private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
 
